@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_KEY_STAGING }}
+        name: id_rsa
+        known_hosts: ${{ secrets.KNOWN_HOSTS_PRODUCTION }}
+        run: echo ${{known_hosts}}
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Zip current folder
+      run: mv package.json server/package.json && cd server && zip -r dist-notifications-production.zip ./
