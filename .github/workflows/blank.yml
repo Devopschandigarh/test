@@ -17,5 +17,7 @@ jobs:
         run: echo ${{known_hosts}}
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Zip current folder
-      run: mv package.json server/package.json && cd server && zip -r dist-notifications-production.zip ./
+    - name: Upload to remote server
+      env:
+        SERVER_IP: ${{ secrets.SERVER_IP_NOTIFICATION }}
+      run: scp -P 8805 -o StrictHostKeyChecking=no -r ./test.txt ubuntu@$SERVER_IP:/home/ubuntu/
